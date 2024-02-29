@@ -1,0 +1,19 @@
+apiVersion: supplychains.dev.springdeveloper.com/v1alpha1
+kind: WebAppV1
+metadata:
+  name: spring-petclinic
+spec:
+  build:
+    env:
+    - name: "BP_JVM_VERSION"
+      value: "17"
+  carvel:
+    packageDomain: "springdeveloper.com"
+    packageName: "spring-petclinic"
+  registry:
+    repository: "cf-sandbox-trisberg/spring-petclinic"
+    server: "gcr.io"
+  source:
+    git:
+      branch: "main"
+      url: "https://github.com/spring-projects/spring-petclinic.git"
