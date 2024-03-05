@@ -1,0 +1,45 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+    name: stream-deployer
+spec:
+    description: Deploys scdf stream resources to the cluster.
+    params:
+        - default: ""
+          description: Path to the yaml to deploy
+          name: subpath
+          type: string
+        - description: Name of the stream to be deployed
+          name: scdf-stream-name
+          type: string
+    results:
+        - name: message
+          type: string
+    stepTemplate:
+        computeResources: {}
+        securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+                drop:
+                    - ALL
+            runAsNonRoot: true
+            runAsUser: 1001
+            seccompProfile:
+                type: RuntimeDefault
+    steps:
+        - computeResources: {}
+          image: springdeveloper/scdf-shell:latest
+          name: deploy-using-scdf-shell
+          script: |-
+            #!/bin/bash
+            set -uo pipefail
+            cd `mktemp -d`
+            export SCDF_URL=http://34.172.20.216
+            MESSAGE=$(/apply.sh "$(workspaces.content.path)"/stream.yaml)
+            if [ $? -ne 0 ]; then
+              printf "strem deploy failed. $MESSAGE" | tee $(results.message.path)
+              exit 1
+            fi
+    workspaces:
+        - description: The folder where the stream definition is
+          name: content

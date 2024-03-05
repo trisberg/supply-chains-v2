@@ -1,0 +1,45 @@
+apiVersion: supply-chain.apps.tanzu.vmware.com/v1alpha1
+kind: Component
+metadata:
+    name: stream-deployer-1.0.0
+spec:
+    config:
+        - path: spec.subPath
+          schema:
+            description: |
+                The path to the yaml to be applied to the cluster.
+            properties:
+                path:
+                    description: The path to the yaml to be applied to the cluster
+                    example: path/to/yaml
+                    type: string
+            required:
+                - path
+            type: object
+    description: Deploys scdf stream resources to the cluster.
+    inputs:
+        - name: package
+          type: package
+    pipelineRun:
+        params:
+            - name: oci-image-with-yaml
+              value: $(inputs.package.url)
+            - name: scdf-stream-name
+              value: $(workload.metadata.name)
+        pipelineRef:
+            name: stream-deployer
+        taskRunTemplate:
+            podTemplate:
+                securityContext:
+                    fsGroup: 1000
+                    runAsGroup: 1000
+                    runAsUser: 1001
+        workspaces:
+            - name: shared-data
+              volumeClaimTemplate:
+                spec:
+                    accessModes:
+                        - ReadWriteOnce
+                    resources:
+                        requests:
+                            storage: 1Gi

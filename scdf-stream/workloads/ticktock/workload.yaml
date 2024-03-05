@@ -1,0 +1,9 @@
+apiVersion: supplychains.dataflow.cloud.springframework.org/v1alpha1
+kind: StreamV1
+metadata:
+  name: ticktock
+spec:
+  source:
+    git:
+      branch: "main"
+      url: "https://github.com/trisberg/ticktock-stream"
