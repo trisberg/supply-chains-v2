@@ -7,3 +7,4 @@ spec:
     git:
       branch: "main"
       url: "https://github.com/trisberg/ticktock-stream"
+  streamName: "ticktock"

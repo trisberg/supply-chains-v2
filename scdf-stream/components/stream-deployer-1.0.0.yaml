@@ -4,28 +4,16 @@ metadata:
     name: stream-deployer-1.0.0
 spec:
     config:
-        - path: spec.subPath
+        - path: spec.streamName
           schema:
             description: |
-                The path to the yaml to be applied to the cluster.
-            properties:
-                path:
-                    description: The path to the yaml to be applied to the cluster
-                    example: path/to/yaml
-                    type: string
-            required:
-                - path
-            type: object
-    description: Deploys scdf stream resources to the cluster.
-    inputs:
-        - name: package
-          type: package
+                The name to the stram to be applied to the system.
+            type: string
+    description: Deploys scdf streams resources to the cluster.
     pipelineRun:
         params:
-            - name: oci-image-with-yaml
-              value: $(inputs.package.url)
             - name: scdf-stream-name
-              value: $(workload.metadata.name)
+              value: $(workload.spec.streamName)
         pipelineRef:
             name: stream-deployer
         taskRunTemplate:

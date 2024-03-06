@@ -3,33 +3,16 @@ kind: Pipeline
 metadata:
     name: stream-deployer
 spec:
-    description: Package your project into a carvel package
+    description: Deploy the stream to SCDF
     params:
-        - name: oci-image-with-yaml
-          type: string
-        - description: Path to the yaml to apply
-          name: subPath
-          type: string
-        - description: Name of the kapp app to be deployed
+        - description: Name of the stream to be deployed
           name: scdf-stream-name
           type: string
     tasks:
-        - name: fetch-yaml
-          params:
-            - name: url
-              value: $(params.oci-image-with-yaml)
-          taskRef:
-            kind: Task
-            name: fetch-tgz-content-oci
-          workspaces:
-            - name: store
-              workspace: shared-data
         - name: stream-deployer
           params:
             - name: scdf-stream-name
               value: $(params.scdf-stream-name)
-          runAfter:
-            - fetch-yaml
           taskRef:
             kind: Task
             name: stream-deployer

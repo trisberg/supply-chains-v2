@@ -5,10 +5,6 @@ metadata:
 spec:
     description: Deploys scdf stream resources to the cluster.
     params:
-        - default: ""
-          description: Path to the yaml to deploy
-          name: subpath
-          type: string
         - description: Name of the stream to be deployed
           name: scdf-stream-name
           type: string
